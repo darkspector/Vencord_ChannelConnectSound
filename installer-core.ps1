@@ -27,9 +27,13 @@ Write-Host "[2/4] Extracting..."
 if (Test-Path (Join-Path $dataDir "dist")) { Remove-Item -Recurse -Force (Join-Path $dataDir "dist") }
 Expand-Archive -Path $distZip -DestinationPath $dataDir -Force
 
-# 3. Download Vencord's official installer CLI
-Write-Host "[3/4] Downloading Vencord installer..."
-Invoke-WebRequest "https://github.com/Vencord/Installer/releases/latest/download/VencordInstallerCli.exe" -OutFile $installer
+# 3. Download Vencord's official installer CLI (skip if already cached)
+if (Test-Path $installer) {
+    Write-Host "[3/4] Vencord installer already present, skipping download."
+} else {
+    Write-Host "[3/4] Downloading Vencord installer..."
+    Invoke-WebRequest "https://github.com/Vencord/Installer/releases/latest/download/VencordInstallerCli.exe" -OutFile $installer
+}
 
 # 4. Patch Discord, pointing it at our local dist
 Write-Host "[4/4] Patching Discord (stable)..."
