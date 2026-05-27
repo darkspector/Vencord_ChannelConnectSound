@@ -240,6 +240,10 @@ export default definePlugin({
         VOICE_CHANNEL_SELECT({ channelId, guildId, currentVoiceChannelId }: { channelId: string | null; guildId: string | null; currentVoiceChannelId: string | null; }) {
             if (!channelId) return;
 
+            // Already in this channel — the event also fires when re-selecting it
+            // (e.g. clicking to watch a stream). Don't replay the sound.
+            if (currentVoiceChannelId === channelId) return;
+
             // guildId is not always present in the event — look it up from the channel store
             const resolvedGuildId = guildId ?? ChannelStore.getChannel(channelId)?.guild_id;
             if (!resolvedGuildId) return;
