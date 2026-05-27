@@ -1,0 +1,69 @@
+name: Build
+
+# Builds Vencord with this plugin baked in and publishes the compiled dist
+# as a downloadable release. End users only need install.ps1 — no Node/pnpm.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # manual "Run workflow" button
+  schedule:
+    - cron: "0 6 * * 1" # weekly Monday 06:00 UTC — picks up upstream Vencord changes
+
+permissions:
+  contents: write # needed to create/update the release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this plugin
+        uses: actions/checkout@v4
+        with:
+          path: plugin
+
+      - name: Checkout Vencord
+        uses: actions/checkout@v4
+        with:
+          repository: Vendicated/Vencord
+          path: Vencord
+
+      - name: Copy plugin into userplugins
+        run: |
+          mkdir -p Vencord/src/userplugins/channelConnectSound
+          cp plugin/index.tsx Vencord/src/userplugins/channelConnectSound/index.tsx
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: Vencord/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: Vencord
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        working-directory: Vencord
+        run: pnpm build
+
+      - name: Zip dist
+        run: cd Vencord && zip -r ../dist.zip dist
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          body: |
+            Auto-built Vencord including the ChannelConnectSound plugin.
+            Download **install.ps1**, right-click → Run with PowerShell.
+          files: |
+            dist.zip
+            plugin/install.ps1
