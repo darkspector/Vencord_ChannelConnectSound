@@ -64,8 +64,8 @@ jobs:
           body: |
             Auto-built Vencord including the ChannelConnectSound plugin.
 
-            **To install:** download **install.bat** and double-click it. (No build tools needed.)
+            **To install:** download **vencord_install.bat** and double-click it. (No build tools needed.)
           files: |
             dist.zip
             plugin/installer-core.ps1
-            plugin/install.bat
+            plugin/vencord_install.bat
