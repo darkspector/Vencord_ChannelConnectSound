@@ -35,7 +35,7 @@ Invoke-WebRequest "https://github.com/Vencord/Installer/releases/latest/download
 Write-Host "[4/4] Patching Discord (stable)..."
 $env:VENCORD_USER_DATA_DIR = $dataDir
 $env:VENCORD_DEV_INSTALL = "1"
-& $installer --install --stable
+& $installer -install -branch stable
 
 # Restart Discord
 Write-Host "Restarting Discord..."
