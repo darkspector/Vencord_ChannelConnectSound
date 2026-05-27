@@ -39,10 +39,17 @@ $env:VENCORD_DEV_INSTALL = "1"
 
 # Restart Discord
 Write-Host "Restarting Discord..."
-taskkill /f /im Discord.exe 2>$null | Out-Null
-Start-Sleep -Seconds 2
+$running = Get-Process Discord -ErrorAction SilentlyContinue
+if ($running) {
+    $running | Stop-Process -Force
+    Start-Sleep -Seconds 2
+}
 $update = Join-Path $env:LOCALAPPDATA "Discord\Update.exe"
-if (Test-Path $update) { Start-Process $update -ArgumentList "--processStart", "Discord.exe" }
+if (Test-Path $update) {
+    Start-Process $update -ArgumentList "--processStart", "Discord.exe"
+} else {
+    Write-Host "Could not find Discord launcher — please start Discord manually." -ForegroundColor Yellow
+}
 
 Write-Host ""
 Write-Host "Done! Discord is restarting. Enable ChannelConnectSound in Settings -> Vencord -> Plugins." -ForegroundColor Green
