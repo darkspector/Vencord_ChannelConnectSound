@@ -9,7 +9,7 @@ echo ChannelConnectSound plugin. No build tools needed.
 echo.
 pause
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& { try { irm 'https://github.com/darkspector/Vencord_ChannelConnectSound/releases/latest/download/install.ps1' | iex } catch { Write-Host $_.Exception.Message -ForegroundColor Red } }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& { try { irm 'https://github.com/darkspector/Vencord_ChannelConnectSound/releases/latest/download/installer-core.ps1' | iex } catch { Write-Host $_.Exception.Message -ForegroundColor Red } }"
 
 echo.
 pause

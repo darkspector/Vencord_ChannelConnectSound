@@ -67,5 +67,5 @@ jobs:
             **To install:** download **install.bat** and double-click it. (No build tools needed.)
           files: |
             dist.zip
-            plugin/install.ps1
+            plugin/installer-core.ps1
             plugin/install.bat
